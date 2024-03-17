@@ -49,28 +49,7 @@ const InvoiceForm = () => {
   
   return (
     <form onSubmit={handleSubmit} className="max-w-lg mx-auto">
-      <div className="mb-4 flex">
-        <div className="w-1/2 pr-2">
-          <label htmlFor="selectedDate" className="block text-gray-700">Invoice Date</label>
-          <DatePicker
-            id="selectedDate"
-            name="selectedDate"
-            selected={formData.selectedDate}
-            onChange={(date) => handleDateChange(date, 'selectedDate')}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
-          />
-        </div>
-        <div className="w-1/2 pl-2">
-          <label htmlFor="dueDate" className="block text-gray-700">Due Date</label>
-          <DatePicker
-            id="dueDate"
-            name="dueDate"
-            selected={formData.dueDate}
-            onChange={(date) => handleDateChange(date, 'dueDate')}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
-          />
-        </div>
-      </div>
+      {/* Invoice Number */}
       <div className="mb-4">
         <label htmlFor="invoiceNumber" className="block text-gray-700">Invoice Number</label>
         <input
@@ -83,18 +62,76 @@ const InvoiceForm = () => {
           className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
         />
       </div>
+
+      {/* Business Name */}
       <div className="mb-4">
-        <label htmlFor="clientName" className="block text-gray-700">Client Name</label>
+        <label htmlFor="businessName" className="block text-gray-700">Business Name</label>
         <input
           type="text"
-          id="clientName"
-          name="clientName"
-          placeholder="Enter client name"
-          value={formData.clientName}
+          id="businessName"
+          name="businessName"
+          placeholder="Enter business name"
+          value={formData.businessName}
           onChange={handleChange}
           className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
         />
       </div>
+
+      {/* ABN */}
+      <div className="mb-4">
+        <label htmlFor="abn" className="block text-gray-700">ABN</label>
+        <input
+          type="text"
+          id="abn"
+          name="abn"
+          placeholder="Enter ABN"
+          value={formData.abn}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+        />
+      </div>
+
+      {/* Current Date */}
+      <div className="mb-4 flex">
+        <div className="w-1/2 pr-2">
+          <label htmlFor="selectedDate" className="block text-gray-700">Invoice Date</label>
+          <DatePicker
+            id="selectedDate"
+            name="selectedDate"
+            selected={formData.selectedDate}
+            onChange={(date) => handleDateChange(date, 'selectedDate')}
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+          />
+        </div>
+
+        {/* Due Date */}
+        <div className="w-1/2 pl-2">
+          <label htmlFor="dueDate" className="block text-gray-700">Due Date</label>
+          <DatePicker
+            id="dueDate"
+            name="dueDate"
+            selected={formData.dueDate}
+            onChange={(date) => handleDateChange(date, 'dueDate')}
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+          />
+        </div>
+      </div>
+      
+      {/* Business Name */}
+      <div className="mb-4">
+        <label htmlFor="fullName" className="block text-gray-700">Full Name</label>
+        <input
+          type="text"
+          id="fullName"
+          name="fullName"
+          placeholder="Enter your full name"
+          value={formData.fullName}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+        />
+      </div>
+
+      {/* Add Logo Option */}
       <div className="mb-4">
         <label htmlFor="logo" className="block text-gray-700">Add Logo</label>
         <input
@@ -106,8 +143,9 @@ const InvoiceForm = () => {
           className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
         />
       </div>
-      <button type="button" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" onClick={handlePreview}>Preview PDF</button>
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Create Invoice</button>
+      
+      <button type="button" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" onClick={handlePreview}>Preview</button>
+      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 ml-4">Save PDF</button>
     </form>
   );
 };
