@@ -5,10 +5,20 @@ import { SavePreview } from './SavePreview';
 
 const InvoiceForm = () => {
   const [formData, setFormData] = useState({
+    invoiceNumber: '',
+    businessName: '',
+    abn: '',
     selectedDate: new Date(),
     dueDate: new Date(),
-    invoiceNumber: '',
-    clientName: '',
+    fullName: '',
+    addressFields: [
+      { label: 'Address Line 1', name: 'addressLine1', value: '' },
+      { label: 'Address Line 2', name: 'addressLine2', value: '' },
+      { label: 'City', name: 'city', value: '' },
+      { label: 'State', name: 'state', value: '' },
+      { label: 'Postcode', name: 'postcode', value: '' },
+      { label: 'Country', name: 'country', value: '' },
+    ],
     items: [],
     logoFile: null,
     totalAmount: 0,
@@ -22,12 +32,23 @@ const InvoiceForm = () => {
     }));
   };
 
+  const handleAddressChange = (e, index) => {
+    const { name, value } = e.target;
+    const updatedAddressFields = [...formData.addressFields];
+    updatedAddressFields[index].value = value;
+    setFormData((prevData) => ({
+      ...prevData,
+      addressFields: updatedAddressFields,
+    }));
+  };
+
   const handleDateChange = (date, name) => {
     setFormData((prevData) => ({
       ...prevData,
       [name]: date,
     }));
   };
+
 
   const handleLogoUpload = (e) => {
     const file = e.target.files[0];
@@ -38,11 +59,13 @@ const InvoiceForm = () => {
   };
 
   const handlePreview = () => {
+    const formattedAddress = formData.addressFields.map((field) => `${field.label}: ${field.value}`).join('\n');
     SavePreview(formData, true, formData.logoFile);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const formattedAddress = formData.addressFields.map((field) => `${field.label}: ${field.value}`).join('\n');
     SavePreview(formData, false, formData.logoFile);
     console.log(formData);
   };
@@ -131,6 +154,22 @@ const InvoiceForm = () => {
         />
       </div>
 
+      {/* Address */}
+      {formData.addressFields.map((field, index) => (
+        <div key={index} className="mb-4">
+          <label htmlFor={field.name} className="block text-gray-700">{field.label}</label>
+          <input
+            type="text"
+            id={field.name}
+            name={field.name}
+            placeholder={`Enter ${field.label}`}
+            value={field.value}
+            onChange={(e) => handleAddressChange(e, index)}
+            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+          />
+        </div>
+      ))}
+
       {/* Add Logo Option */}
       <div className="mb-4">
         <label htmlFor="logo" className="block text-gray-700">Add Logo</label>
@@ -143,7 +182,9 @@ const InvoiceForm = () => {
           className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
         />
       </div>
+
       
+
       <button type="button" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" onClick={handlePreview}>Preview</button>
       <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 ml-4">Save PDF</button>
     </form>

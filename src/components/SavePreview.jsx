@@ -3,6 +3,8 @@ import jsPDF from 'jspdf';
 export function SavePreview(formData, isPreview, logoFile) {
     const doc = new jsPDF();
 
+    doc.setFontSize(10);
+
     function calculateCoordinates(doc, marginX, marginY, index, lineHeight = 10) {
         const x = marginX;
         const y = marginY + index * lineHeight;
@@ -12,15 +14,22 @@ export function SavePreview(formData, isPreview, logoFile) {
   
     const marginX = 10;
     const marginY = 10;
-    const lineHeight = 10;
+    const lineHeight = 4;
     let index = 0;
   
     // to be printed, using axis increments 
+    doc.setFontSize(16);
     doc.text('TAX INVOICE', ...Object.values(calculateCoordinates(doc, marginX, marginY, index++, lineHeight)));
+    doc.setFontSize(10);
     doc.text(`Invoice Date: ${formData.selectedDate.toDateString()}`, ...Object.values(calculateCoordinates(doc, marginX, marginY, index++, lineHeight)));
     doc.text(`Due Date: ${formData.dueDate.toDateString()}`, ...Object.values(calculateCoordinates(doc, marginX, marginY, index++, lineHeight)));
     doc.text(`Invoice Number: ${formData.invoiceNumber}`, ...Object.values(calculateCoordinates(doc, marginX, marginY, index++, lineHeight)));
-    doc.text(`Client Name: ${formData.clientName}`, ...Object.values(calculateCoordinates(doc, marginX, marginY, index++, lineHeight)));
+    doc.text(`${formData.fullName}`, ...Object.values(calculateCoordinates(doc, marginX, marginY, index++, lineHeight)));
+
+    formData.addressFields.forEach((field) => {
+        const textToPrint = `${field.value}`;
+        doc.text(textToPrint, ...Object.values(calculateCoordinates(doc, marginX, marginY, index++, lineHeight)));
+    });
 
     // add logo to invoice if selected
     if (logoFile) {
