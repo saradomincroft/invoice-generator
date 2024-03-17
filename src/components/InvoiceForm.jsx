@@ -9,6 +9,7 @@ const InvoiceForm = () => {
     invoiceNumber: '',
     clientName: '',
     items: [],
+    logoFile: null,
     totalAmount: 0,
   });
 
@@ -26,17 +27,23 @@ const InvoiceForm = () => {
       selectedDate: date,
     }));
   };
-
+  const handleLogoUpload = (e) => {
+    const file = e.target.files[0];
+    setFormData((prevData) => ({
+      ...prevData,
+      logoFile: file,
+    }));
+  };
   const handlePreview = () => {
-    SavePreview(formData, true);
+    SavePreview(formData, true, formData.logoFile);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    SavePreview(formData, false);
+    SavePreview(formData, false, formData.logoFile);
     console.log(formData);
   };
-
+  
   return (
     <form onSubmit={handleSubmit} className="max-w-lg mx-auto">
       <div className="mb-4">
@@ -70,6 +77,17 @@ const InvoiceForm = () => {
           placeholder="Enter client name"
           value={formData.clientName}
           onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
+        />
+      </div>
+      <div className="mb-4">
+        <label htmlFor="logo" className="block text-gray-700">Add Logo</label>
+        <input
+          type="file"
+          id="logo"
+          name="logo"
+          accept=".png, .jpg, .jpeg"
+          onChange={handleLogoUpload}
           className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
         />
       </div>
