@@ -17,19 +17,29 @@ const InvoiceForm = () => {
     }));
   };
 
+  const handlePreview = () => {
+    generatePDF(true); 
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    generatePDF();
+    generatePDF(false);
     console.log(formData);
   };
 
-  const generatePDF = () => {
+  const generatePDF = (isPreview) => {
     const doc = new jsPDF();
     doc.text('Invoice Form', 10, 10);
     doc.text(`Invoice Number: ${formData.invoiceNumber}`, 10, 20);
     doc.text(`Client Name: ${formData.clientName}`, 10, 30);
-    const filename = `INV${formData.invoiceNumber}.pdf`;
-    doc.save(filename); // Save PDF
+    
+    if (isPreview) {
+      window.open(doc.output('bloburl'), '_blank');
+    } else {
+
+      const filename = `INV${formData.invoiceNumber}.pdf`;
+      doc.save(filename);
+    }
   };
 
   return (
@@ -58,7 +68,7 @@ const InvoiceForm = () => {
           className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
         />
       </div>
-  
+      <button type="button" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"onClick={handlePreview}>Preview PDF</button>
       <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Create Invoice</button>
     </form>
   );
