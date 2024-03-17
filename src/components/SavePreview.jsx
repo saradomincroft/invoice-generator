@@ -18,6 +18,7 @@ export function SavePreview(formData, isPreview, logoFile) {
     // to be printed, using axis increments 
     doc.text('TAX INVOICE', ...Object.values(calculateCoordinates(doc, marginX, marginY, index++, lineHeight)));
     doc.text(`Invoice Date: ${formData.selectedDate.toDateString()}`, ...Object.values(calculateCoordinates(doc, marginX, marginY, index++, lineHeight)));
+    doc.text(`Due Date: ${formData.dueDate.toDateString()}`, ...Object.values(calculateCoordinates(doc, marginX, marginY, index++, lineHeight)));
     doc.text(`Invoice Number: ${formData.invoiceNumber}`, ...Object.values(calculateCoordinates(doc, marginX, marginY, index++, lineHeight)));
     doc.text(`Client Name: ${formData.clientName}`, ...Object.values(calculateCoordinates(doc, marginX, marginY, index++, lineHeight)));
 
