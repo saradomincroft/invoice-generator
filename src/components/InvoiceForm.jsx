@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { SavePreview } from './SavePreview';
+import InputAddress from './InputAddress';
+import LineItems from './LineItems';
 
-const InvoiceForm = () => {
+function InvoiceForm() {
   const [formData, setFormData] = useState({
     invoiceNumber: '',
     businessName: '',
@@ -49,6 +51,56 @@ const InvoiceForm = () => {
     }));
   };
 
+  const [lineItem, setLineItem] = useState({
+    quantity: '',
+    description: '',
+    unitPrice: '',
+    gst: 'Yes',
+  });
+
+  const handleLineItemChange = (e) => {
+    const { name, value } = e.target;
+    setLineItem((prevItem) => ({
+      ...prevItem,
+      [name]: value,
+    }));
+  };
+
+
+
+  const addLineItem = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      items: [...prevData.items, lineItem],
+    }));
+    setLineItem({
+      quantity: '',
+      description: '',
+      unitPrice: '',
+      gst: 'Yes',
+    });
+  };
+
+  const removeLineItem = (index) => {
+    const updatedItems = [...formData.items];
+    updatedItems.splice(index, 1);
+    setFormData((prevData) => ({
+      ...prevData,
+      items: updatedItems,
+    }));
+  };
+
+  const calculateLineNumber = (index) => {
+    return index + 1;
+  };
+
+  // const calculateLineTotal = (item) => {
+  //   const quantity = parseFloat(item.quantity);
+  //   const unitPrice = parseFloat(item.unitPrice);
+  //   const gst = item.gst === 'Yes' ? 0.1 : 0;
+  //   const lineTotal = (quantity * unitPrice) * (1 + gst);
+  //   return isNaN(lineTotal) ? '' : lineTotal.toFixed(2);
+  // };
 
   const handleLogoUpload = (e) => {
     const file = e.target.files[0];
@@ -59,7 +111,6 @@ const InvoiceForm = () => {
   };
 
   const handlePreview = () => {
-    const formattedAddress = formData.addressFields.map((field) => `${field.label}: ${field.value}`).join('\n');
     SavePreview(formData, true, formData.logoFile);
   };
 
@@ -155,21 +206,21 @@ const InvoiceForm = () => {
       </div>
 
       {/* Address */}
-      {formData.addressFields.map((field, index) => (
-        <div key={index} className="mb-4">
-          <label htmlFor={field.name} className="block text-gray-700">{field.label}</label>
-          <input
-            type="text"
-            id={field.name}
-            name={field.name}
-            placeholder={`Enter ${field.label}`}
-            value={field.value}
-            onChange={(e) => handleAddressChange(e, index)}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
-          />
-        </div>
-      ))}
+      <div className="mb-4">
+        <h2 className="text-lg font-bold mb-2">Address</h2>
+        <InputAddress formData={formData} handleAddressChange={handleAddressChange} />
+      </div>
 
+      {/* Line Items */}
+      <LineItems
+        formData={formData}
+        calculateLineNumber={calculateLineNumber}
+        handleLineItemChange={handleLineItemChange}
+        handleRemoveItem={removeLineItem}
+        handleAddItem={addLineItem}
+      />
+
+      
       {/* Add Logo Option */}
       <div className="mb-4">
         <label htmlFor="logo" className="block text-gray-700">Add Logo</label>
@@ -182,8 +233,6 @@ const InvoiceForm = () => {
           className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500"
         />
       </div>
-
-      
 
       <button type="button" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" onClick={handlePreview}>Preview</button>
       <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 ml-4">Save PDF</button>
